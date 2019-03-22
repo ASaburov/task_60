@@ -1,12 +1,19 @@
 package junit.tests;
 
+
+import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import pages.TutByHomePage;
+
+import java.io.File;
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.Assert.assertEquals;
@@ -50,6 +57,13 @@ public class TutByLoginLogoutTests {
         homePage.login(LOGIN, PASSWORD);
         homePage.expandEnterPopup();
         homePage.logout();
+        //taking a screenshot and saving it to the file
+        File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+        try {
+            FileUtils.copyFile(scrFile,new File("src/main/screenshots" + "logoutImage.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         assertThrows(NoSuchElementException.class, () ->
                 homePage.getUserNameElement().isDisplayed());
     }
