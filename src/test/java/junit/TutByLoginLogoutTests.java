@@ -1,22 +1,20 @@
-package junit.tests;
+package junit;
 
 
-import org.apache.commons.io.FileUtils;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import pages.TutByHomePage;
+import util.ScreenshotMaker;
 
 import java.io.File;
-import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 public class TutByLoginLogoutTests {
@@ -24,6 +22,11 @@ public class TutByLoginLogoutTests {
     private static final String URL = "https://tut.by";
     private static final String LOGIN = "seleniumtests@tut.by";
     private static final String PASSWORD = "123456789zxcvbn";
+    private static final String LOGIN_EXPECTED_RESULT = "Selenium Test";
+    private static final String SCREENSHOT_FILE_PATH = "src/main/screenshots";
+    private static final String SCREENSHOT_FILE_NAME = "logoutImage.png";
+
+
 
 
     private WebDriver driver;
@@ -46,7 +49,7 @@ public class TutByLoginLogoutTests {
         TutByHomePage homePage = new TutByHomePage(driver);
         homePage.expandEnterPopup();
         homePage.login(LOGIN, PASSWORD);
-        assertEquals("Selenium Test", homePage.getUserNameElement().getText());
+        assertEquals(LOGIN_EXPECTED_RESULT, homePage.getCurrentUserName());
     }
 
     //test logs out the app and check whether username is not displayed
@@ -58,14 +61,11 @@ public class TutByLoginLogoutTests {
         homePage.expandEnterPopup();
         homePage.logout();
         //taking a screenshot and saving it to the file
-        File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-        try {
-            FileUtils.copyFile(scrFile,new File("src/main/screenshots" + "logoutImage.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ScreenshotMaker screenshotMaker = new ScreenshotMaker();
+        File file = screenshotMaker.takeScreenshot(driver);
+        screenshotMaker.saveTheScreenhotTo(file, SCREENSHOT_FILE_PATH, SCREENSHOT_FILE_NAME);
         assertThrows(NoSuchElementException.class, () ->
-                homePage.getUserNameElement().isDisplayed());
+                homePage.getCurrentUserName());
     }
 
 

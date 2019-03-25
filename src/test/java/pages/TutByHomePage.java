@@ -18,7 +18,7 @@ public class TutByHomePage extends PageObject {
         super(driver);
     }
 
-    public void expandEnterPopup(){
+    public void expandEnterPopup() {
         this.driver.findElement(ENTER_POPUP).click();
     }
 
@@ -28,12 +28,12 @@ public class TutByHomePage extends PageObject {
         this.driver.findElement(ENTER_SUBMIT_BUTTON).click();
     }
 
-    public void logout(){
+    public void logout() {
         this.driver.findElement(EXIT_BUTTON).click();
     }
 
-    public WebElement getUserNameElement(){
-        return this.driver.findElement(USERNAME_LINK);
+    public String getCurrentUserName() {
+        return this.driver.findElement(USERNAME_LINK).getText();
     }
 
 
